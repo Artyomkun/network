@@ -85,6 +85,32 @@ Separate build targets:
 - `stats_app` - the Part 3* application;
 - `logger_tests` - unit tests.
 
+## Continuous integration (CI)
+
+Every push and pull request is built and tested on GitHub Actions:
+Linux, Windows and macOS runners (C++17 and C++20), Debian bookworm and
+trixie containers, plus a strict `-Werror` job.
+
+### Why RISC-V is not in CI
+
+GitHub Actions has no native RISC-V runners. The only way to run the
+tests on RISC-V would be QEMU emulation (a `linux/riscv64` container
+under `docker/setup-qemu-action`), which would make the abseil build and
+the test run several times slower and would not catch any real defect:
+the code is standard C++ plus POSIX/Winsock and is architecture-agnostic
+by design. Cross-compiling without a runner would verify only the compile
+step, not the tests, so it was not added either.
+
+### Why a separate "CISC" job is not in CI
+
+"RISC vs CISC" is already covered by the existing matrix: all current
+runners (ubuntu, windows, macOS) are x86-64 - a CISC architecture, and
+the macOS arm64 runner is RISC. A 32-bit x86 (i686) job would add no
+mainstream runner to the matrix and is not a target of the assignment;
+the code uses `size_t` and standard types and does not exercise any
+32-bit-specific behavior. An i386 container was considered but only
+doubles the build time without verifying anything new.
+
 ## Running
 
 ### Part 2: console journal application
