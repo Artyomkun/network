@@ -8,3 +8,4 @@ add_executable(journal_app
 target_link_libraries(journal_app PRIVATE logger)
 
 apply_quality(journal_app)
+link_logger_runtime(journal_app)

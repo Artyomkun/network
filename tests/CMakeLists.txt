@@ -15,3 +15,4 @@ target_include_directories(logger_tests PRIVATE ${CMAKE_SOURCE_DIR}/stats)
 target_link_libraries(logger_tests PRIVATE logger)
 
 apply_quality(logger_tests)
+link_logger_runtime(logger_tests)

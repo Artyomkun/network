@@ -12,3 +12,4 @@ add_executable(bench_logger
 target_link_libraries(bench_logger PRIVATE logger)
 
 apply_quality(bench_logger)
+link_logger_runtime(bench_logger)

@@ -45,6 +45,26 @@ include(cmake/Quality.cmake)
 # The first configuration requires git and network (abseil-cpp is cloned).
 set(ABSL_PROPAGATE_CXX_STD ON CACHE BOOL "Use the parent's C++ standard" FORCE)
 set(ABSL_BUILD_TESTING OFF CACHE BOOL "Disable abseil tests" FORCE)
+# The logger library: shared (ON) or static (OFF) build. Defined before
+# FetchContent because the absl build mode depends on it.
+option(LOGGER_BUILD_SHARED "Build the logger library as a shared library" OFF)
+if(LOGGER_BUILD_SHARED)
+    if(WIN32)
+        # Build abseil as one monolith DLL (abseil_dll): on Windows a static
+        # absl linked into both the logger DLL and the executables would create
+        # two independent copies of the absl::log sink registry, so a sink
+        # registered in one module would never receive LOG() calls from the
+        # other. On MSVC this is also the default ("always enabled for
+        # Windows"); on MinGW it needs ABSL_BUILD_MONOLITHIC_SHARED_LIBS.
+        set(BUILD_SHARED_LIBS ON CACHE BOOL "Build abseil libraries as shared" FORCE)
+        set(ABSL_BUILD_MONOLITHIC_SHARED_LIBS ON CACHE BOOL "Build abseil as one shared library" FORCE)
+    else()
+        # PIC is required when linking the static absl libraries into the
+        # shared liblogger.so (Linux x86-64 otherwise fails on -fPIC
+        # relocations).
+        set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+    endif()
+endif()
 include(FetchContent)
 FetchContent_Declare(abseil-cpp
     GIT_REPOSITORY https://github.com/abseil/abseil-cpp.git
@@ -59,11 +79,20 @@ if(WIN32)
     # (absl/time) enable WinRT code (windows.globalization.h) that MinGW
     # cannot build. Lowering the version makes cctz use the fallback path of
     # local timezone detection; WinRT is not needed here.
-    target_compile_definitions(absl_time_zone PRIVATE NTDDI_VERSION=NTDDI_WIN10)
+    # In the monolith DLL build the timezone code lives in abseil_dll; in the
+    # plain build it lives in absl_time_zone.
+    if(TARGET abseil_dll)
+        target_compile_definitions(abseil_dll PRIVATE NTDDI_VERSION=NTDDI_WIN10)
+        # The monolith DLL does not propagate the per-library system deps
+        # (dbghelp for symbolize, bcrypt for the random generator).
+        target_link_libraries(abseil_dll PRIVATE dbghelp bcrypt)
+    else()
+        target_compile_definitions(absl_time_zone PRIVATE NTDDI_VERSION=NTDDI_WIN10)
+    endif()
 endif()
 
-# The logger library: shared (ON) or static (OFF) build.
-option(LOGGER_BUILD_SHARED "Build the logger library as a shared library" OFF)
+# The logger library build mode (shared/static) is chosen above, before the
+# dependencies, because the absl build mode depends on it.
 # Enables the socket sink (Part 1.5) and the statistics application (Part 3).
 option(LOGGER_ENABLE_SOCKETS "Enable the socket sink (Part 1.5) and the stats app (Part 3)" ON)
 # Enables building and running unit tests.

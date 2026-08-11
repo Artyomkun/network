@@ -30,19 +30,19 @@ inline const socket_handle kInvalidSocket =
 // contract leaks the socket. RAII ownership is provided by SocketGuard.
 // TODO: fold SocketGuard into an RAII SocketHandle class.
 
-bool socketInit();
-void socketCleanup();
+LOGGER_API bool socketInit();
+LOGGER_API void socketCleanup();
 
-socket_handle tcpConnect(const std::string& host, int port, bool& ok);
-socket_handle tcpListen(const std::string& host, int port, bool& ok);
-socket_handle tcpAccept(socket_handle listener, bool& ok);
+LOGGER_API socket_handle tcpConnect(const std::string& host, int port, bool& ok);
+LOGGER_API socket_handle tcpListen(const std::string& host, int port, bool& ok);
+LOGGER_API socket_handle tcpAccept(socket_handle listener, bool& ok);
 
-bool tcpSend(socket_handle sock, const char* data, int size);
-int tcpReceive(socket_handle sock, char* buffer, int size);
+LOGGER_API bool tcpSend(socket_handle sock, const char* data, int size);
+LOGGER_API int tcpReceive(socket_handle sock, char* buffer, int size);
 
-bool tcpWait(socket_handle sock, int timeout_ms);
+LOGGER_API bool tcpWait(socket_handle sock, int timeout_ms);
 
-void tcpClose(socket_handle sock);
+LOGGER_API void tcpClose(socket_handle sock);
 
 // RAII owner of a socket. Closes the descriptor in the destructor, so the
 // socket cannot leak even if an exception or an early return exits the

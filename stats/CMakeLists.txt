@@ -13,3 +13,4 @@ add_executable(stats_app
 target_link_libraries(stats_app PRIVATE logger)
 
 apply_quality(stats_app)
+link_logger_runtime(stats_app)

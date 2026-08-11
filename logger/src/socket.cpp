@@ -173,11 +173,11 @@ bool tcpSend(socket_handle sock, const char* data, int size) {
     while (left > 0) {
 #if defined(LOGGER_HAS_MSG_NOSIGNAL)
         // Linux: MSG_NOSIGNAL - writing to a broken socket does not kill the process.
-        const int sent = static_cast<int>(send(sock, pos, left, MSG_NOSIGNAL));
+        const int sent = static_cast<int>(send(sock, pos, static_cast<size_t>(left), MSG_NOSIGNAL));
 #elif defined(LOGGER_HAS_SO_NOSIGPIPE)
-        const int sent = static_cast<int>(send(sock, pos, left, 0));
+        const int sent = static_cast<int>(send(sock, pos, static_cast<size_t>(left), 0));
 #else
-        const int sent = static_cast<int>(send(sock, pos, left, 0));
+        const int sent = static_cast<int>(send(sock, pos, static_cast<size_t>(left), 0));
 #endif
         if (sent <= 0) {
             return false;
@@ -189,7 +189,7 @@ bool tcpSend(socket_handle sock, const char* data, int size) {
 }
 
 int tcpReceive(socket_handle sock, char* buffer, int size) {
-    return static_cast<int>(recv(sock, buffer, size, 0));
+    return static_cast<int>(recv(sock, buffer, static_cast<size_t>(size), 0));
 }
 
 bool tcpWait(socket_handle sock, int timeout_ms) {
