@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    name: ${{ matrix.os }} / C++${{ matrix.std }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        std: [17, 20]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure (static)
+        run: cmake -S . -B build -DLOGGER_CXX_STANDARD=${{ matrix.std }} -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build -j 2
+
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
+
+      - name: Configure (shared)
+        run: cmake -S . -B build-shared -DLOGGER_CXX_STANDARD=${{ matrix.std }} -DLOGGER_BUILD_SHARED=ON -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build (shared)
+        run: cmake --build build-shared -j 2
+
+      - name: Test (shared)
+        run: ctest --test-dir build-shared --output-on-failure
+
+  debian:
+    name: Debian ${{ matrix.release }} / C++${{ matrix.std }}
+    runs-on: ubuntu-latest
+    container: debian:${{ matrix.release }}
+    strategy:
+      fail-fast: false
+      matrix:
+        release: [bookworm, trixie]
+        std: [17, 20]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build tools
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends \
+            build-essential cmake git ca-certificates
+
+      - name: Configure
+        run: cmake -S . -B build -DLOGGER_CXX_STANDARD=${{ matrix.std }} -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build -j 2
+
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
+
+  quality:
+    name: Strict warnings (-Werror)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure with -Werror
+        run: cmake -S . -B build -DLOGGER_WERROR=ON -DCMAKE_BUILD_TYPE=Release
+      - name: Build
+        run: cmake --build build -j 2
+      - name: Test
+        run: ctest --test-dir build --output-on-failure

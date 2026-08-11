@@ -1,0 +1,21 @@
+# Build directories
+build*/
+build-shared/
+cmake-build-*/
+
+# Compiler/IDE artifacts
+*.o
+*.obj
+*.a
+*.so
+*.dll
+*.lib
+*.exe
+*.out
+.vscode/
+.idea/
+*.user
+
+# Journal files created when running the applications
+*.log
+logs/
