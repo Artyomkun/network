@@ -16,3 +16,4 @@
 #else
 #  define LOGGER_API __attribute__((visibility("default")))
 #endif
+

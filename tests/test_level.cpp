@@ -50,3 +50,4 @@ TEST("fromAbslSeverity round-trips all levels") {
           logger::Level::Error);
     CHECK(logger::fromAbslSeverity(absl::LogSeverity::kFatal) == logger::Level::Error);
 }
+

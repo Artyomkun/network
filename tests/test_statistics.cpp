@@ -68,3 +68,4 @@ TEST("Statistics is empty before any messages") {
     CHECK_EQ(statistics.averageLength(), 0.0);
     CHECK_EQ(statistics.lastHour(), 0u);
 }
+
