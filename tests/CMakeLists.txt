@@ -1,3 +1,6 @@
+# Copyright 2026 Artyomkun
+# SPDX-License-Identifier: Apache-2.0
+
 add_executable(logger_tests
     main.cpp
     test_level.cpp

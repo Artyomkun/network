@@ -1,3 +1,6 @@
+# Copyright 2026 Artyomkun
+# SPDX-License-Identifier: Apache-2.0
+
 # ============================================================================
 # "Production-grade" build quality settings:
 # strict warnings for all targets, optional Werror mode.

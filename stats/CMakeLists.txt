@@ -1,3 +1,6 @@
+# Copyright 2026 Artyomkun
+# SPDX-License-Identifier: Apache-2.0
+
 if(NOT LOGGER_ENABLE_SOCKETS)
     message(FATAL_ERROR "The stats application requires LOGGER_ENABLE_SOCKETS")
 endif()

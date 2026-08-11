@@ -1,3 +1,6 @@
+﻿// Copyright 2026 Artyomkun
+// SPDX-License-Identifier: Apache-2.0
+
 // Micro-benchmarks of logging on absl::log.
 //
 // Measures the median latency of one operation (ns/op) and the throughput

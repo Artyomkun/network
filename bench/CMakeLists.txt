@@ -1,3 +1,6 @@
+# Copyright 2026 Artyomkun
+# SPDX-License-Identifier: Apache-2.0
+
 # Micro-benchmarks: write latency, formatter comparison across standard
 # versions, multithreading, file vs socket.
 #

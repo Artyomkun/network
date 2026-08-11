@@ -1,5 +1,7 @@
 # Logging library and demo applications
 
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
+
 Test assignment for the "C++ Developer (intern)" position: a library for
 writing messages to a journal with different severity levels, plus
 applications demonstrating it.
@@ -283,3 +285,9 @@ absl::log ──► the absl::LogSink interface (sink registry)
 - C++17, OOP, CMake + GCC, separate build targets, the only external
   dependency is absl::log (agreed with the customer), no exceptions in
   business logic, error handling, a single git repository.
+
+## License
+
+Apache License 2.0. See [LICENSE](LICENSE) for details. Every source file
+carries an SPDX header (`SPDX-License-Identifier: Apache-2.0`) for
+automated license compliance scanning.

@@ -1,3 +1,6 @@
+﻿// Copyright 2026 Artyomkun
+// SPDX-License-Identifier: Apache-2.0
+
 #include <string>
 
 #include "absl/base/log_severity.h"
